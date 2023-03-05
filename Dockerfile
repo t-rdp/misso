@@ -4,6 +4,7 @@ FROM golang:alpine AS Builder
 WORKDIR /app
 
 # Install basic packages
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
 RUN apk add \
     gcc \
     g++
@@ -12,6 +13,8 @@ RUN apk add \
 COPY . .
 
 # Download all the dependencies
+RUN go env -w GO111MODULE=on
+RUN go env -w GOPROXY=https://mirrors.aliyun.com/goproxy/,direct
 RUN go mod download
 
 # Build image
